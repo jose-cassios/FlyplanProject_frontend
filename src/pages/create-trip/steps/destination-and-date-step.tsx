@@ -26,6 +26,30 @@ export function DestinationAndDateStep({
 }: DestinationAndDateStepProps) {
 
     const [isDatePickerOpen, setIsDatePickerOpen] = useState(false)
+    const [tempDateRange, setTempDateRange] = useState<DateRange | undefined>(eventStartAndEndDates)
+    const [dateError, setDateError] = useState<string | null>(null)
+
+    function handleConfirmDate() {
+        if (!tempDateRange?.from || !tempDateRange?.to) {
+            setDateError('Selecione o período completo da viagem.')
+            return
+        }
+
+        const today = new Date()
+        today.setHours(0, 0, 0, 0)
+
+        const startDate = new Date(tempDateRange.from)
+        startDate.setHours(0, 0, 0, 0)
+
+        if (startDate < today) {
+            setDateError('A data de início não pode ser anterior a hoje.')
+            return
+        }
+
+        setDateError(null)
+        setEventStartAndEndDates(tempDateRange)
+        closeDatePicker()
+    }
 
     function openDatePicker() {
         setIsDatePickerOpen(true)
@@ -78,10 +102,34 @@ export function DestinationAndDateStep({
 
                         <DayPicker
                             mode="range"
-                            selected={eventStartAndEndDates}
-                            onSelect={setEventStartAndEndDates}
+                            selected={tempDateRange}
+                            onSelect={setTempDateRange}
                             locale={ptBR}
+                            disabled={{ before: new Date() }}
                         />
+                        {dateError && (
+                            <p className="text-red-400 text-sm">
+                                {dateError}
+                            </p>
+                        )}
+
+                        <div className="flex justify-end gap-2 pt-3">
+                            <Button
+                                variant="secondary"
+                                onClick={closeDatePicker}
+                            >
+                                Cancelar
+                            </Button>
+
+                            <Button
+                                variant="primary"
+                                onClick={handleConfirmDate}
+                            >
+                                Confirmar
+                            </Button>
+                        </div>
+
+
                     </div>
                 </div>
             )}
