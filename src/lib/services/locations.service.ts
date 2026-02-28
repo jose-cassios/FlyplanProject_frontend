@@ -18,9 +18,22 @@ export async function searchCities(query: string) {
     }
   )
 
-  return response.data.map((item: any) => ({
-    city: item.address.city || item.address.town || item.address.village,
-    state: item.address.state,
-    country: item.address.country
-  }))
+  return response.data
+    .map((item: any) => {
+      const city =
+        item.address.city ||
+        item.address.town ||
+        item.address.village ||
+        item.address.municipality ||
+        item.address.county
+
+      if (!city) return null
+
+      return {
+        city,
+        state: item.address.state || '',
+        country: item.address.country || ''
+      }
+    })
+    .filter(Boolean)
 }
