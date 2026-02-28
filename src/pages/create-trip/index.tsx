@@ -9,6 +9,7 @@ import { api } from "../../lib/axios"
 
 export function CreateTripPage() {
   const navigate = useNavigate()
+  const [formError, setFormError] = useState<string | null>(null)
 
   // GuestsInput é o campo de Quem estará na viagem
   const [isGuestsInputOpen, setIsGuestsInputOpen] = useState(false)
@@ -55,11 +56,12 @@ export function CreateTripPage() {
     event.preventDefault()
     
     if (!destination || !ownerEmail || !ownerName || !eventStartAndEndDates?.from || !eventStartAndEndDates?.to){
-      alert('Preencha todos os dados para criar a viagem')
+      setFormError('Preencha todos os dados para criar a viagem.')
       return
     }
 
   try {
+    setFormError(null)
     setIsLoading(true)
 
     const response = await api.post('/trips', {
@@ -133,7 +135,9 @@ export function CreateTripPage() {
             createTrip={createTrip}
             setOwnerName={setOwnerName}
             setOwnerEmail={setOwnerEmail}
+            setFormError={setFormError}
             isLoading={isLoading}
+            error={formError}
             trip = {{
               destination,
               eventStartAndEndDates

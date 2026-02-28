@@ -9,7 +9,9 @@ interface ConfirmTripModalProps {
   createTrip: (event: FormEvent<HTMLFormElement>) => void
   setOwnerName: (name: string) => void
   setOwnerEmail: (email: string) => void
+  setFormError: (error: string | null) => void
   isLoading: boolean
+  error: string | null
   trip: {
     destination: string
     eventStartAndEndDates: DateRange | undefined
@@ -21,7 +23,9 @@ export function ConfirmTripModal({
   createTrip,
   setOwnerName,
   setOwnerEmail,
+  setFormError,
   isLoading,
+  error,
   trip
 }: ConfirmTripModalProps) {
   return (
@@ -45,7 +49,10 @@ export function ConfirmTripModal({
               type="text"
               name="name"
               placeholder="Seu nome completo"
-              onChange={event => setOwnerName(event.target.value)}
+              onChange={event => {
+                setFormError(null)
+                setOwnerName(event.target.value)
+              }}
               className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
             />
           </div>
@@ -55,10 +62,19 @@ export function ConfirmTripModal({
               type="email"
               name="email"
               placeholder="Seu E-mail pessoal"
-              onChange={event => setOwnerEmail(event.target.value)}
+              onChange={event => {
+                setFormError(null)
+                setOwnerEmail(event.target.value)
+              }}
               className="bg-transparent text-lg placeholder-zinc-400 outline-none flex-1"
             />
           </div>
+
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm px-4 py-3 rounded-lg">
+              {error}
+            </div>
+          )}
 
           <Button type="submit" variant="primary" size="full" disabled={isLoading}>
             {isLoading ? (
