@@ -30,6 +30,8 @@ export function CreateTripPage() {
 
   // Modal para confirmar a viagem
   const [isConfirmTripModalOpen, setIsConfirmTripModalOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
   function openConfirmTripModal(){
     setIsConfirmTripModalOpen(true)
   }
@@ -57,6 +59,9 @@ export function CreateTripPage() {
       return
     }
 
+  try {
+    setIsLoading(true)
+
     const response = await api.post('/trips', {
       destination,
       starts_at: eventStartAndEndDates?.from,
@@ -69,6 +74,11 @@ export function CreateTripPage() {
     const { tripId } = response.data
 
     navigate(`/trips/${tripId}`)
+    } catch (error) {
+      alert(`Erro ao criar viagem ${error}`)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -123,6 +133,7 @@ export function CreateTripPage() {
             createTrip={createTrip}
             setOwnerName={setOwnerName}
             setOwnerEmail={setOwnerEmail}
+            isLoading={isLoading}
             trip = {{
               destination,
               eventStartAndEndDates

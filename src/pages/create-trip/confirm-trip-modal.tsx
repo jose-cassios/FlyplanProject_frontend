@@ -2,12 +2,14 @@ import { AtSign, User, X } from "lucide-react";
 import { FormEvent } from "react";
 import { Button } from "../../components/button";
 import { DateRange } from "react-day-picker";
+import { Loader2 } from "lucide-react";
 
 interface ConfirmTripModalProps {
   closeConfirmTripModal: () => void
   createTrip: (event: FormEvent<HTMLFormElement>) => void
   setOwnerName: (name: string) => void
   setOwnerEmail: (email: string) => void
+  isLoading: boolean
   trip: {
     destination: string
     eventStartAndEndDates: DateRange | undefined
@@ -19,6 +21,7 @@ export function ConfirmTripModal({
   createTrip,
   setOwnerName,
   setOwnerEmail,
+  isLoading,
   trip
 }: ConfirmTripModalProps) {
   return (
@@ -57,8 +60,15 @@ export function ConfirmTripModal({
             />
           </div>
 
-          <Button type="submit" variant="primary" size="full">
-            Confirmar criação da viagem
+          <Button type="submit" variant="primary" size="full" disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader2 className="size-5 animate-spin" />
+                Criando viagem...
+              </>
+            ) : (
+              'Confirmar criação da viagem'
+            )}
           </Button>
         </form>
 
