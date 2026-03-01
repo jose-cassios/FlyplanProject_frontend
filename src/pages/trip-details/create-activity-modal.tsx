@@ -21,18 +21,18 @@ export function CreateActivityModal ({
         const title = data.get('title')?.toString()
         const occurs_at = data.get('occurs_at')?.toString()
 
-        console.log({
-            title,
-            occurs_at
-        })
-
-        window.document.location.reload()
-        await api.post(`trips/${tripId}/activities`, {
-            title,
-            occurs_at
-        }).then(() => {
-            closeCreateActivityModalOpen()
-        })
+        try {
+            await api.post(`trips/${tripId}/activities`, {
+                title,
+                occurs_at
+            }).then(() => {
+                closeCreateActivityModalOpen()
+                window.document.location.reload()
+            })
+        } catch (error) {
+            console.error("Erro ao criar atividade: ", error)
+            alert("Não foi possível salvar a atividade. Tente novamente.")
+        }
     }
 
 
