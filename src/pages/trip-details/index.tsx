@@ -84,9 +84,10 @@ export function TripDetailsPage() {
                 <InviteGuestsModal
                     closeGuestModal={closeGuestsModal}
                     onAddEmail={async (email) => {
-                        await api.post(`/trips/${tripId}/invites`, { email })
-                        closeGuestsModal()
-                        navigate(`/trips/${tripId}`)
+                        await api.post(`/trips/${tripId}/invites`, { email }).then(()=>{
+                            closeGuestsModal()
+                            navigate(`/trips/${tripId}`)
+                        })
                     }}
                 />
             )}
