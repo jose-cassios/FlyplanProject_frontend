@@ -20,13 +20,18 @@ export function CreateLinkModal ({
         const title = data.get('title')?.toString()
         const url = data.get('url')?.toString()
 
-        window.document.location.reload()
-        await api.post(`trips/${tripId}/links`, {
-            title,
-            url
-        }).then(() => {
-            closeCreateLinksModalOpen()
-        })
+        try {
+            await api.post(`trips/${tripId}/links`, {
+                title,
+                url
+            }).then(() => {
+                closeCreateLinksModalOpen()
+                window.document.location.reload()
+            })
+        } catch (error){
+            console.error("Erro ao criar link: ", error)
+            alert("Não foi possível salvar o link. Tente novamente.")
+        }
     }
 
 
